@@ -40,7 +40,7 @@ function geronimo() {
              for (var i = 0; i < msg.length; i++) {
                 var rank = i + 1;
                 // Can we make this shorter?
-                $("#highscore-table tbody").append("<tr><td id='rank'>" + rank + "</td><td id='playername'>" + msg[i]['name'] + "</td><td id='cloudprovider'>" + msg[i]['cloud'] + "</td><td id='zone'>" + msg[i]['zone'] + "</td><td id='host'>" + msg[i]['host'] + "</td><td id='score'>" + msg[i]['score'] + "</td></tr>");
+                $("#highscore-table tbody").append("<tr><td id='rank'>" + rank + "</td><td id='playername'>" + msg[i]['name'] + "</td><td id='score'>" + msg[i]['score'] + "</td></tr>");
              }
            }
         });
@@ -59,7 +59,7 @@ function geronimo() {
                 $("#livestats-table tbody").text("");
                 for (var i = 0; i < msg.length; i++) {
                     var userId = i + 1;
-                    $("#livestats-table tbody").append("<tr><td id='userid'>" + userId + "</td><td id='cloudprovider'>" + msg[i]['cloud'] + "</td><td id='zone'>" + msg[i]['zone'] + "</td><td id='host'>" + msg[i]['host'] + "</td><td id='score'>" + msg[i]['score'] + "</td><td id='level'>" + msg[i]['level'] + "</td><td id='lives'>" + msg[i]['lives'] + "</td><td id='elapsedtime'>" + msg[i]['et'] + "</td><td id='txncount'>" + msg[i]['txncount'] + "</td></tr>");
+                    $("#livestats-table tbody").append("<tr><td id='userid'>" + userId + "</td><td id='score'>" + msg[i]['score'] + "</td><td id='level'>" + msg[i]['level'] + "</td><td id='lives'>" + msg[i]['lives'] + "</td><td id='elapsedtime'>" + msg[i]['et'] + "</td><td id='txncount'>" + msg[i]['txncount'] + "</td></tr>");
                 }
 
                 if (game.user.livestats) {
@@ -70,16 +70,13 @@ function geronimo() {
         });
     }
 
-    function ajaxAdd(n, c, z, h, s, l) {
+    function ajaxAdd(n, s, l) {
 
         $.ajax({
            type: 'POST',
            url: 'highscores',
            data: {
              name: n,
-             cloud: c,
-             zone: z,
-             host: h,
              score: s,
              level: l
              },
@@ -130,16 +127,13 @@ function geronimo() {
         });
     }
 
-    function ajaxUpdateUserStats(u, c, z, h, s, le, li, et) {
+    function ajaxUpdateUserStats(u, s, le, li, et) {
         $.ajax({
             type: "POST",
             datatype: "json",
             url: "user/stats",
             data: {
                 userId: u,
-                cloud: c,
-                zone: z,
-                host: h,
                 score: s,
                 level: le,
                 lives: li,
@@ -157,8 +151,7 @@ function geronimo() {
     function addHighscore() {
         var name = $("input[type=text]").val();
         $("#highscore-form").html("Saving highscore...");
-        ajaxAdd(name, game.cloudProvider, game.zone, game.host,
-                 game.score.score, game.level);
+        ajaxAdd(name, game.score.score, game.level);
     }
 
     function getUserId() {
@@ -170,7 +163,7 @@ function geronimo() {
     }
 
     function updateUserStats() {
-        ajaxUpdateUserStats(game.user.id, game.cloudProvider, game.zone, game.host,
+        ajaxUpdateUserStats(game.user.id,
                             game.score.score, game.level, pacman.lives,
                             game.timer.getElapsedTimeSecs());
     }
@@ -269,9 +262,9 @@ function geronimo() {
         this.databaseUpdateInterval = 10; // in seconds
         this.running = false;
         this.pause = true;
-        this.cloudProvider = '';
-        this.zone = '';
-        this.host = '';
+        // this.cloudProvider = 'AWS';
+        // this.zone = '';
+        // this.host = '';
         this.user = new User();
         this.score = new Score();
         this.soundfx = 0;
@@ -1394,8 +1387,7 @@ function checkAppCache() {
         // Hide address bar
         hideAdressbar();
 
-        // Get and show cloud location metadata
-        getCloudMetadata();
+        
 
         if (window.applicationCache != null) checkAppCache();
 

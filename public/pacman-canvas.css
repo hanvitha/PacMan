@@ -83,9 +83,6 @@ tr:hover {
 #livestats-table { width: 100%; text-align: center;}
 #rank {}
 #playername {}
-#cloudprovider {}
-#zone {}
-#host {}
 #score {}
 #userid {}
 #level {}
@@ -132,12 +129,9 @@ body, html { font-size: 15px; }
 div.audio {}
 audio {display: block; }
 
-.cloudprovider { width: inherit; }
-.zone { width: inherit; }
-.host { width: inherit; }
 .time { width: 290px; }
 .score { width: 290px; }
-.score, .lives, .level, .cloudprovider, .zone, .host, .time { display: inline-block; }
+.score, .lives, .level, .time { display: inline-block; }
 
 /* ---------- Controls ------------------------*/
 
